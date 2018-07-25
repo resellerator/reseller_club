@@ -1,6 +1,5 @@
 require 'httparty'
 require 'uri'
-require_relative 'reseller_club/version'
 require_relative 'reseller_club/authentication'
 require_relative 'reseller_club/customers'
 require_relative 'reseller_club/contacts'
