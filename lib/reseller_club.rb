@@ -19,8 +19,8 @@ module ResellerClub
       API.default_params('api-key' => api_key)
     end
 
-    def password=(password)
-      API.default_params('auth-password' => password)
+    def logger=(logger)
+      API.debug_output(logger)
     end
   end
 
@@ -53,9 +53,10 @@ module ResellerClub
     end
 
     def self.validate_settings!
-      unless default_options[:default_params]['auth-userid'] and (default_options[:default_params]['api-key'] or default_options[:default_params]['auth-password'])
-        raise Error.new('Missing API Configuration Settings')
-      end
+      missing = []
+      missing << "reseller_id" unless default_params['auth-userid']
+      missing << "api_key" unless default_params['api-key']
+      raise Error.new("Missing ResellerClub API Configuration Settings: #{missing.join(', ')}") unless missing.empty?
     end
 
   end
