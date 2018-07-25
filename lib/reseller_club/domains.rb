@@ -38,6 +38,20 @@ module ResellerClub
       search
     end
 
+    def self.find(order_id, options: 'All')
+      response = API.get('/domains/details.json', query: {
+        "order-id" => order_id,
+        "options" => options
+      })
+      Domain.new(
+        name: response['domainname'],
+        customer_id: response['customerid'],
+        order_id: response['orderid'],
+        expires_at: response['endtime'],
+        original_data: response
+      )
+    end
+
     # List all domains owned by a specific customer.
     def self.search(page: 1, per_page: 10, order_by: 'orderid', customer_id: nil)
       params = {'page-no' => page, 'no-of-records' => per_page, 'order-by' => order_by}
