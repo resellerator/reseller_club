@@ -1,6 +1,6 @@
 module ResellerClub
   class Domain
-    attr_accessor :name_with_tld,
+    attr_accessor :name,
                   :available,
                   :customer_id,
                   :order_id,
@@ -9,19 +9,18 @@ module ResellerClub
                   :auto_renew,
                   :original_data
 
-    def initialize(name_with_tld, args_hash)
-      @name_with_tld = name_with_tld
+    def initialize(**args_hash)
       args_hash.each do |key, value|
         send("#{key}=", value)
       end
     end
 
-    def name
-      @name_with_tld.split('.').first
+    def expires_at=(value)
+      @expires_at = Time.at(value.to_i)
     end
 
     def tld
-      @name_with_tld.split('.').last
+      name.split('.').last
     end
 
     def available?

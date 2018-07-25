@@ -10,7 +10,7 @@ module ResellerClub
       }
       response = API.get('/domains/available.json?' + URI.encode_www_form(params))
       response.map do |domain, information|
-        Domain.new(domain, available: information['status'] == 'available')
+        Domain.new(name: domain, available: information['status'] == 'available')
       end
     end
 
@@ -47,14 +47,15 @@ module ResellerClub
       response.delete 'recsonpage' # current page total
       response.delete 'recsindb'   # total search results
       response.map do |index, data|
-        Domain.new(data['entity.description'], {
+        Domain.new(
+          name: data['entity.description'],
           customer_id: data['entity.customerid'],
           order_id: data['orders.orderid'],
-          expires_at: Time.at(data['orders.endtime'].to_i),
+          expires_at: data['orders.endtime'],
           transfer_lock: data['orders.transferlock'],
           auto_renew: data['orders.autorenew'],
           original_data: data
-        })
+        )
       end
     end
 
